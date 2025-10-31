@@ -7,46 +7,30 @@ function App() {
   const [vistaActual, setVistaActual] = useState<Vista>("productos");
 
   return (
-    <div style={estilos.app}>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* HEADER */}
-      <header style={estilos.header}>
-        <div style={estilos.headerContent}>
-          <h1 style={estilos.logo}>🛍️ Tienda de Ropa</h1>
-          <nav style={estilos.nav}>
+      <header className="bg-secondary text-white sticky top-0 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-3xl font-bold">🛍️ Tienda de Ropa</h1>
+
+          <nav className="flex gap-4">
             <button
               onClick={() => setVistaActual("inicio")}
-              style={
-                vistaActual === "inicio" ? estilos.botonActivo : estilos.boton
-              }
-              onMouseEnter={(e) => {
-                if (vistaActual !== "inicio")
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(255,255,255,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                if (vistaActual !== "inicio")
-                  e.currentTarget.style.backgroundColor = "transparent";
-              }}
+              className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 ${
+                vistaActual === "inicio"
+                  ? "bg-white text-secondary"
+                  : "border-2 border-white hover:bg-white/10"
+              }`}
             >
               🏠 Inicio
             </button>
-
             <button
               onClick={() => setVistaActual("productos")}
-              style={
+              className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 ${
                 vistaActual === "productos"
-                  ? estilos.botonActivo
-                  : estilos.boton
-              }
-              onMouseEnter={(e) => {
-                if (vistaActual !== "productos")
-                  e.currentTarget.style.backgroundColor =
-                    "rgba(255,255,255,0.1)";
-              }}
-              onMouseLeave={(e) => {
-                if (vistaActual !== "productos")
-                  e.currentTarget.style.backgroundColor = "transparent";
-              }}
+                  ? "bg-white text-secondary"
+                  : "border-2 border-white hover:bg-white/10"
+              }`}
             >
               🛍️ Productos
             </button>
@@ -55,20 +39,18 @@ function App() {
       </header>
 
       {/* CONTENIDO PRINCIPAL */}
-      <main>
+      <main className="flex-1">
         {vistaActual === "inicio" && (
-          <div style={estilos.inicio}>
-            <h2>👋 Bienvenido a nuestra tienda</h2>
-            <p>Explora nuestro catálogo de productos de alta calidad</p>
+          <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center px-4">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+              👋 Bienvenido a nuestra tienda
+            </h2>
+            <p className="text-xl text-gray-600 mb-8">
+              Explora nuestro catálogo de productos de alta calidad
+            </p>
             <button
               onClick={() => setVistaActual("productos")}
-              style={estilos.botonInicio}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#2980b9")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#3498db")
-              }
+              className="px-10 py-4 bg-primary text-white text-xl font-bold rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow-lg hover:shadow-xl"
             >
               Ver Productos
             </button>
@@ -79,106 +61,14 @@ function App() {
       </main>
 
       {/* FOOTER */}
-      <footer style={estilos.footer}>
-        <p>© 2024 Tienda de Ropa - E-commerce Base</p>
-        <p style={estilos.footerTech}>TypeScript + React + MongoDB</p>
+      <footer className="bg-gray-700 text-white text-center py-6 mt-auto">
+        <p className="font-semibold">© 2024 Tienda de Ropa - E-commerce Base</p>
+        <p className="text-sm text-gray-400 mt-2">
+          TypeScript + React + MongoDB + Tailwind CSS
+        </p>
       </footer>
     </div>
   );
 }
-
-// Estilos
-interface Estilos {
-  [key: string]: React.CSSProperties;
-}
-
-const estilos: Estilos = {
-  app: {
-    minHeight: "100vh",
-    backgroundColor: "#f5f5f5",
-    display: "flex",
-    flexDirection: "column",
-  },
-  header: {
-    backgroundColor: "#2c3e50",
-    color: "white",
-    padding: "15px 0",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    position: "sticky",
-    top: 0,
-    zIndex: 1000,
-  },
-  headerContent: {
-    maxWidth: "1400px",
-    margin: "0 auto",
-    padding: "0 20px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logo: {
-    margin: 0,
-    fontSize: "28px",
-    fontWeight: "bold",
-  },
-  nav: {
-    display: "flex",
-    gap: "15px",
-  },
-  boton: {
-    padding: "10px 20px",
-    backgroundColor: "transparent",
-    color: "white",
-    border: "2px solid white",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold",
-    transition: "all 0.3s ease",
-  },
-  botonActivo: {
-    padding: "10px 20px",
-    backgroundColor: "white",
-    color: "#2c3e50",
-    border: "2px solid white",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold",
-  },
-  inicio: {
-    textAlign: "center",
-    padding: "100px 20px",
-    minHeight: "calc(100vh - 200px)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  botonInicio: {
-    marginTop: "30px",
-    padding: "15px 40px",
-    backgroundColor: "#3498db",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "18px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease",
-  },
-  footer: {
-    backgroundColor: "#34495e",
-    color: "white",
-    textAlign: "center",
-    padding: "20px",
-    marginTop: "auto",
-  },
-  footerTech: {
-    fontSize: "12px",
-    color: "#95a5a6",
-    marginTop: "5px",
-  },
-};
 
 export default App;

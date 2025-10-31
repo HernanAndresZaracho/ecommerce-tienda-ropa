@@ -73,3 +73,23 @@ npm run dev
 
 **Versión:** 2.0 - TypeScript  
 **Última actualización:** [30/10/2025, 10:41:29]
+
+## ✅ Estado del Proyecto
+
+- [x] Ladrillo 1: Estructura básica (JS)
+- [x] Ladrillo 1.5: Migración a TypeScript
+- [x] Ladrillo 2: Base de datos y productos ⭐ NUEVO
+- [ ] Ladrillo 3: Carrito de compras
+- [ ] Ladrillo 4: Autenticación
+- [ ] Ladrillo 5: Checkout y pagos
+
+## 📸 Capturas
+
+### Catálogo de Productos
+
+(Aquí pueden agregar screenshot si quieren)
+
+### Base de Datos MongoDB
+
+- 9 productos activos
+- 3 categorías: remeras, camisas, pantalones
