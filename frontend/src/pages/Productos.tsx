@@ -92,18 +92,21 @@ function Productos() {
         {productos.map((producto) => (
           <div
             key={producto._id}
-            className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer"
+            className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group"
           >
-            {/* IMAGEN Y TAG DE CATEGORÍA */}
-            <div className="relative h-80 overflow-hidden">
+            {/* IMAGEN CON EFECTO ZOOM */}
+            <div className="relative h-80 overflow-hidden bg-gray-100">
               <img
                 src={producto.imagen}
                 alt={producto.nombre}
-                className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
-              <span className="absolute top-4 right-4 bg-black/70 text-white px-4 py-2 rounded-full text-xs font-bold uppercase">
+              <span className="absolute top-4 right-4 bg-black/80 text-white px-4 py-2 rounded-full text-xs font-bold uppercase backdrop-blur-sm">
                 {producto.categoria}
               </span>
+
+              {/* OVERLAY EN HOVER */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
             </div>
 
             {/* INFORMACIÓN DEL PRODUCTO */}
