@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Productos from "./pages/Productos";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 type Vista = "productos" | "inicio";
 
@@ -9,34 +11,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* HEADER */}
-      <header className="bg-secondary text-white sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">🛍️ Tienda de Ropa</h1>
-
-          <nav className="flex gap-4">
-            <button
-              onClick={() => setVistaActual("inicio")}
-              className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 ${
-                vistaActual === "inicio"
-                  ? "bg-white text-secondary"
-                  : "border-2 border-white hover:bg-white/10"
-              }`}
-            >
-              🏠 Inicio
-            </button>
-            <button
-              onClick={() => setVistaActual("productos")}
-              className={`px-6 py-2 rounded-lg font-bold transition-all duration-300 ${
-                vistaActual === "productos"
-                  ? "bg-white text-secondary"
-                  : "border-2 border-white hover:bg-white/10"
-              }`}
-            >
-              🛍️ Productos
-            </button>
-          </nav>
-        </div>
-      </header>
+      <Navbar vistaActual={vistaActual} setVistaActual={setVistaActual} />
 
       {/* CONTENIDO PRINCIPAL */}
       <main className="flex-1">
@@ -61,12 +36,7 @@ function App() {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-gray-700 text-white text-center py-6 mt-auto">
-        <p className="font-semibold">© 2024 Tienda de Ropa - E-commerce Base</p>
-        <p className="text-sm text-gray-400 mt-2">
-          TypeScript + React + MongoDB + Tailwind CSS
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 }
