@@ -1,188 +1,115 @@
-import { useState } from "react";
-import { useCarrito } from "../../context/CarritoContext";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-type Vista = "productos" | "inicio" | "carrito";
+export default function Navbar() {
+  const { estaAutenticado, usuario, logout } = useAuth();
 
-interface NavbarProps {
-  vistaActual: Vista;
-  setVistaActual: (vista: Vista) => void;
-}
-
-function Navbar({ vistaActual, setVistaActual }: NavbarProps) {
-  const [menuAbierto, setMenuAbierto] = useState(false);
-  const { carrito } = useCarrito();
+  const handleLogout = () => {
+    if (window.confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+      logout();
+    }
+  };
 
   return (
-    <header className="bg-linear-to-r from-secondary via-gray-800 to-secondary text-white sticky top-0 z-50 shadow-xl border-b-2 border-primary/30">
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* LOGO */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-2xl">🛍️</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold bg-linear-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              Tienda de Ropa
-            </h1>
-          </div>
-
-          <button
-            onClick={() => setMenuAbierto(!menuAbierto)}
-            className="sm:hidden text-white hover:text-primary transition-colors duration-300 focus:outline-none p-2 rounded-lg hover:bg-white/10"
-            aria-label="Abrir menú"
+    <nav className="bg-linear-to-r from-slate-900 to-slate-800 text-white shadow-lg sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo - IZQUIERDA */}
+          <Link
+            to="/"
+            className="text-2xl font-bold hover:text-blue-400 transition"
           >
-            <svg
-              className="w-7 h-7"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {menuAbierto ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+            🛍️ StyleStore
+          </Link>
 
-          <nav className="hidden sm:flex gap-3 items-center">
-            <button
-              onClick={() => setVistaActual("inicio")}
-              className={`
-                px-6 py-2.5 rounded-lg font-bold transition-all duration-300 
-                ${
-                  vistaActual === "inicio"
-                    ? "bg-white text-secondary shadow-lg scale-105"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10 hover:scale-105"
-                }
-              `}
+          {/* Links de navegación - DERECHA */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="hover:text-blue-400 transition font-medium">
+              Inicio
+            </Link>
+            <Link
+              to="/productos"
+              className="hover:text-blue-400 transition font-medium"
             >
-              <span className="flex items-center gap-2">
-                <span>🏠</span>
-                <span>Inicio</span>
-              </span>
-            </button>
-            <button
-              onClick={() => setVistaActual("productos")}
-              className={`
-                px-6 py-2.5 rounded-lg font-bold transition-all duration-300
-                ${
-                  vistaActual === "productos"
-                    ? "bg-white text-secondary shadow-lg scale-105"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10 hover:scale-105"
-                }
-              `}
-            >
-              <span className="flex items-center gap-2">
-                <span>🛍️</span>
-                <span>Productos</span>
-              </span>
-            </button>
+              Productos
+            </Link>
 
-            <button
-              onClick={() => setVistaActual("carrito")}
-              className={`
-                px-6 py-2.5 rounded-lg font-bold transition-all duration-300 relative
-                ${
-                  vistaActual === "carrito"
-                    ? "bg-white text-secondary shadow-lg scale-105"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10 hover:scale-105"
-                }
-              `}
-            >
-              <span className="flex items-center gap-2">
-                <span>🛒</span>
-                <span>Carrito</span>
-                {carrito.cantidadTotal > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                    {carrito.cantidadTotal}
-                  </span>
-                )}
-              </span>
-            </button>
-          </nav>
+            {/* Menú de usuario */}
+            {estaAutenticado ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-300">
+                  Hola, <span className="font-semibold">{usuario?.nombre}</span>
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition font-medium"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 hover:bg-slate-700 rounded-lg transition font-medium"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  to="/registro"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition font-medium"
+                >
+                  Registrarse
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
 
-        {menuAbierto && (
-          <nav className="sm:hidden mt-4 flex flex-col gap-3 animate-fadeIn pb-2">
-            <button
-              onClick={() => {
-                setVistaActual("inicio");
-                setMenuAbierto(false);
-              }}
-              className={`
-                px-6 py-3.5 rounded-lg font-bold transition-all duration-300 text-left
-                ${
-                  vistaActual === "inicio"
-                    ? "bg-white text-secondary shadow-lg"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10"
-                }
-              `}
+        {/* Menú móvil */}
+        <div className="md:hidden mt-4 pt-4 border-t border-slate-700">
+          <div className="flex flex-col space-y-3">
+            <Link to="/" className="hover:text-blue-400 transition font-medium">
+              Inicio
+            </Link>
+            <Link
+              to="/productos"
+              className="hover:text-blue-400 transition font-medium"
             >
-              <span className="flex items-center gap-3">
-                <span className="text-xl">🏠</span>
-                <span>Inicio</span>
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                setVistaActual("productos");
-                setMenuAbierto(false);
-              }}
-              className={`
-                px-6 py-3.5 rounded-lg font-bold transition-all duration-300 text-left
-                ${
-                  vistaActual === "productos"
-                    ? "bg-white text-secondary shadow-lg"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10"
-                }
-              `}
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-xl">🛍️</span>
-                <span>Productos</span>
-              </span>
-            </button>
+              Productos
+            </Link>
 
-            <button
-              onClick={() => {
-                setVistaActual("carrito");
-                setMenuAbierto(false);
-              }}
-              className={`
-                px-6 py-3.5 rounded-lg font-bold transition-all duration-300 text-left relative
-                ${
-                  vistaActual === "carrito"
-                    ? "bg-white text-secondary shadow-lg"
-                    : "border-2 border-white/50 hover:border-white hover:bg-white/10"
-                }
-              `}
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-xl">🛒</span>
-                <span>Carrito</span>
-                {carrito.cantidadTotal > 0 && (
-                  <span className="ml-auto bg-accent text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                    {carrito.cantidadTotal}
-                  </span>
-                )}
-              </span>
-            </button>
-          </nav>
-        )}
+            {estaAutenticado ? (
+              <>
+                <span className="text-sm text-gray-300">
+                  Hola, <span className="font-semibold">{usuario?.nombre}</span>
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition font-medium text-left"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 hover:bg-slate-700 rounded-lg transition font-medium"
+                >
+                  Iniciar sesión
+                </Link>
+                <Link
+                  to="/registro"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition font-medium"
+                >
+                  Registrarse
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 }
-
-export default Navbar;

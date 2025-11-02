@@ -1,33 +1,31 @@
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
-import BotonCarrito from "./components/ui/BotonCarrito";
+import BotonCarrito from "./components/ui/BotonCarrito"; // 👈 Importar
 import Inicio from "./pages/Inicio";
 import Productos from "./pages/Productos";
 import Carrito from "./pages/Carrito";
-
-type Vista = "productos" | "inicio" | "carrito";
+import Login from "./pages/Login";
+import Registro from "./pages/Registro";
+import NotFound from "./pages/NotFound";
 
 function App() {
-  const [vistaActual, setVistaActual] = useState<Vista>("inicio");
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Navbar vistaActual={vistaActual} setVistaActual={setVistaActual} />
-
-      <main className="flex-1">
-        {vistaActual === "inicio" && <Inicio setVistaActual={setVistaActual} />}
-        {vistaActual === "productos" && <Productos />}
-        {vistaActual === "carrito" && (
-          <Carrito setVistaActual={setVistaActual} />
-        )}
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="grow">
+        <Routes>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
-
       <Footer />
-
-      {vistaActual !== "carrito" && (
-        <BotonCarrito onClick={() => setVistaActual("carrito")} />
-      )}
+      {/* Botón flotante del carrito - ABAJO DERECHA */}
+      <BotonCarrito /> {/* 👈 Agregar aquí */}
     </div>
   );
 }

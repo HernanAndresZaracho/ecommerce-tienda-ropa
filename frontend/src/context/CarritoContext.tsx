@@ -5,122 +5,134 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import {
-  Carrito,
-  ItemCarrito,
-  CarritoContextType,
-} from "../interfaces/carrito.interface";
+import { ItemCarrito } from "../interfaces/carrito.interface";
 import { Producto } from "../interfaces/producto.interface";
+import { useAuth } from "./AuthContext";
 
-// Crear el contexto
+interface CarritoContextType {
+  items: ItemCarrito[];
+  agregarAlCarrito: (
+    producto: Producto,
+    talla: string,
+    cantidad: number
+  ) => void; // 👈
+  eliminarDelCarrito: (productoId: string, talla: string) => void;
+  actualizarCantidad: (
+    productoId: string,
+    talla: string,
+    cantidad: number
+  ) => void;
+  vaciarCarrito: () => void;
+  calcularTotal: () => number;
+  cantidadTotal: number;
+}
+
 const CarritoContext = createContext<CarritoContextType | undefined>(undefined);
 
-// Carrito inicial vacío
-const carritoInicial: Carrito = {
-  items: [],
-  total: 0,
-  cantidadTotal: 0,
+export const useCarrito = () => {
+  const context = useContext(CarritoContext);
+  if (!context) {
+    throw new Error("useCarrito debe usarse dentro de un CarritoProvider");
+  }
+  return context;
 };
 
-// Proveedor del contexto
-export function CarritoProvider({ children }: { children: ReactNode }) {
-  const [carrito, setCarrito] = useState<Carrito>(() => {
-    // Cargar carrito desde localStorage si existe
-    const carritoGuardado = localStorage.getItem("carrito");
-    return carritoGuardado ? JSON.parse(carritoGuardado) : carritoInicial;
-  });
+interface CarritoProviderProps {
+  children: ReactNode;
+}
 
-  // Guardar en localStorage cada vez que cambie el carrito
+export const CarritoProvider = ({ children }: CarritoProviderProps) => {
+  const [items, setItems] = useState<ItemCarrito[]>([]);
+  const { usuario } = useAuth();
+
+  // Cargar carrito del localStorage al iniciar (según usuario)
   useEffect(() => {
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-  }, [carrito]);
+    const carritoKey = usuario ? `carrito_${usuario.id}` : "carrito";
+    const carritoGuardado = localStorage.getItem(carritoKey);
 
-  // Función para calcular el total
-  const calcularTotal = (): number => {
-    return carrito.items.reduce((total, item) => {
-      return total + item.producto.precio * item.cantidad;
-    }, 0);
-  };
+    if (carritoGuardado) {
+      try {
+        setItems(JSON.parse(carritoGuardado));
+      } catch (error) {
+        console.error("Error al cargar carrito:", error);
+      }
+    }
+  }, []); // Solo al montar el componente
 
-  // Función para agregar producto al carrito
+  // Sincronizar carrito cuando el usuario cambie (login/logout)
+  useEffect(() => {
+    if (usuario) {
+      // Usuario autenticado: cargar su carrito
+      const carritoUsuarioKey = `carrito_${usuario.id}`;
+      const carritoGuardado = localStorage.getItem(carritoUsuarioKey);
+
+      if (carritoGuardado) {
+        try {
+          setItems(JSON.parse(carritoGuardado));
+        } catch (error) {
+          console.error("Error al cargar carrito del usuario:", error);
+        }
+      } else {
+        // Si no tiene carrito guardado, usar el carrito actual (de invitado)
+        // y asociarlo al usuario
+        if (items.length > 0) {
+          localStorage.setItem(carritoUsuarioKey, JSON.stringify(items));
+        }
+      }
+    } else {
+      // Usuario no autenticado: cargar carrito de invitado
+      const carritoInvitado = localStorage.getItem("carrito");
+      if (carritoInvitado) {
+        try {
+          setItems(JSON.parse(carritoInvitado));
+        } catch (error) {
+          console.error("Error al cargar carrito de invitado:", error);
+        }
+      }
+    }
+  }, [usuario]);
+
+  // Guardar carrito en localStorage cuando cambie
+  useEffect(() => {
+    if (usuario) {
+      // Guardar con el ID del usuario
+      localStorage.setItem(`carrito_${usuario.id}`, JSON.stringify(items));
+    } else {
+      // Guardar como invitado
+      localStorage.setItem("carrito", JSON.stringify(items));
+    }
+  }, [items, usuario]);
+
   const agregarAlCarrito = (
     producto: Producto,
     talla: string,
-    cantidad: number = 1
+    cantidad: number
   ) => {
-    setCarrito((carritoActual) => {
-      // Buscar si el producto con esa talla ya existe
-      const itemExistente = carritoActual.items.find(
-        (item) =>
-          item.producto._id === producto._id && item.tallaSeleccionada === talla
+    setItems((prevItems) => {
+      const itemExistente = prevItems.find(
+        (item) => item.producto._id === producto._id && item.talla === talla
       );
 
-      let nuevosItems: ItemCarrito[];
-
       if (itemExistente) {
-        // Si existe, aumentar la cantidad
-        nuevosItems = carritoActual.items.map((item) =>
-          item.producto._id === producto._id && item.tallaSeleccionada === talla
+        return prevItems.map((item) =>
+          item.producto._id === producto._id && item.talla === talla
             ? { ...item, cantidad: item.cantidad + cantidad }
             : item
         );
-      } else {
-        // Si no existe, agregarlo
-        nuevosItems = [
-          ...carritoActual.items,
-          {
-            producto,
-            cantidad,
-            tallaSeleccionada: talla,
-          },
-        ];
       }
 
-      // Calcular nuevo total
-      const nuevoTotal = nuevosItems.reduce((total, item) => {
-        return total + item.producto.precio * item.cantidad;
-      }, 0);
-
-      // Calcular cantidad total de items
-      const nuevaCantidadTotal = nuevosItems.reduce((total, item) => {
-        return total + item.cantidad;
-      }, 0);
-
-      return {
-        items: nuevosItems,
-        total: nuevoTotal,
-        cantidadTotal: nuevaCantidadTotal,
-      };
+      return [...prevItems, { producto, talla, cantidad }];
     });
   };
 
-  // Función para eliminar producto del carrito
   const eliminarDelCarrito = (productoId: string, talla: string) => {
-    setCarrito((carritoActual) => {
-      const nuevosItems = carritoActual.items.filter(
-        (item) =>
-          !(
-            item.producto._id === productoId && item.tallaSeleccionada === talla
-          )
-      );
-
-      const nuevoTotal = nuevosItems.reduce((total, item) => {
-        return total + item.producto.precio * item.cantidad;
-      }, 0);
-
-      const nuevaCantidadTotal = nuevosItems.reduce((total, item) => {
-        return total + item.cantidad;
-      }, 0);
-
-      return {
-        items: nuevosItems,
-        total: nuevoTotal,
-        cantidadTotal: nuevaCantidadTotal,
-      };
-    });
+    setItems((prevItems) =>
+      prevItems.filter(
+        (item) => !(item.producto._id === productoId && item.talla === talla)
+      )
+    );
   };
 
-  // Función para actualizar cantidad de un producto
   const actualizarCantidad = (
     productoId: string,
     talla: string,
@@ -131,54 +143,39 @@ export function CarritoProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    setCarrito((carritoActual) => {
-      const nuevosItems = carritoActual.items.map((item) =>
-        item.producto._id === productoId && item.tallaSeleccionada === talla
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.producto._id === productoId && item.talla === talla
           ? { ...item, cantidad }
           : item
-      );
-
-      const nuevoTotal = nuevosItems.reduce((total, item) => {
-        return total + item.producto.precio * item.cantidad;
-      }, 0);
-
-      const nuevaCantidadTotal = nuevosItems.reduce((total, item) => {
-        return total + item.cantidad;
-      }, 0);
-
-      return {
-        items: nuevosItems,
-        total: nuevoTotal,
-        cantidadTotal: nuevaCantidadTotal,
-      };
-    });
+      )
+    );
   };
 
-  // Función para vaciar el carrito
   const vaciarCarrito = () => {
-    setCarrito(carritoInicial);
-    localStorage.removeItem("carrito");
+    setItems([]);
   };
 
-  const value: CarritoContextType = {
-    carrito,
+  const calcularTotal = () => {
+    return items.reduce(
+      (total, item) => total + item.producto.precio * item.cantidad,
+      0
+    );
+  };
+
+  const cantidadTotal = items.reduce((total, item) => total + item.cantidad, 0);
+
+  const value = {
+    items,
     agregarAlCarrito,
     eliminarDelCarrito,
     actualizarCantidad,
     vaciarCarrito,
     calcularTotal,
+    cantidadTotal,
   };
 
   return (
     <CarritoContext.Provider value={value}>{children}</CarritoContext.Provider>
   );
-}
-
-// Hook personalizado para usar el carrito
-export function useCarrito() {
-  const context = useContext(CarritoContext);
-  if (context === undefined) {
-    throw new Error("useCarrito debe ser usado dentro de CarritoProvider");
-  }
-  return context;
-}
+};

@@ -1,8 +1,7 @@
-interface InicioProps {
-  setVistaActual: (vista: "productos" | "inicio") => void;
-}
+import { useNavigate } from "react-router-dom";
 
-function Inicio({ setVistaActual }: InicioProps) {
+export default function Inicio() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-8 text-center px-4">
       <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-800">
@@ -13,7 +12,7 @@ function Inicio({ setVistaActual }: InicioProps) {
         y pantalones para todos los estilos.
       </p>
       <button
-        onClick={() => setVistaActual("productos")}
+        onClick={() => navigate("productos")}
         className="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-white text-lg sm:text-xl font-bold rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow-lg hover:shadow-xl"
       >
         🛍️ Ver Productos
@@ -42,5 +41,3 @@ function Inicio({ setVistaActual }: InicioProps) {
     </div>
   );
 }
-
-export default Inicio;

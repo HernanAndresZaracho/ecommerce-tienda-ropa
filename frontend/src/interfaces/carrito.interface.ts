@@ -3,7 +3,7 @@ import { Producto } from "./producto.interface";
 export interface ItemCarrito {
   producto: Producto;
   cantidad: number;
-  tallaSeleccionada: string;
+  talla: string;
 }
 
 export interface Carrito {

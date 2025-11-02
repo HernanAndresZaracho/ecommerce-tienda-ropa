@@ -20,7 +20,7 @@ function ProductoCard({ producto }: ProductoCardProps) {
       return;
     }
 
-    agregarAlCarrito(producto, tallaSeleccionada);
+    agregarAlCarrito(producto, tallaSeleccionada, 1);
 
     // Mostrar mensaje de confirmación
     setMostrandoMensaje(true);
