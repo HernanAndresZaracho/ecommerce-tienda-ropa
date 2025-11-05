@@ -34,24 +34,6 @@ ecommerce-tienda-ropa/
 └── README.md
 ```
 
-## 🔧 Instalación y Uso
-
-### Backend
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
 ## ✅ Estado del Proyecto
 
 - [x] Ladrillo 1: Estructura básica (JS)
@@ -82,12 +64,6 @@ npm run dev
 - [ ] Ladrillo 3: Carrito de compras
 - [ ] Ladrillo 4: Autenticación
 - [ ] Ladrillo 5: Checkout y pagos
-
-## 📸 Capturas
-
-### Catálogo de Productos
-
-(Aquí pueden agregar screenshot si quieren)
 
 ### Base de Datos MongoDB
 
