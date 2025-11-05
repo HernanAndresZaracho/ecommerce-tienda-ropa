@@ -37,6 +37,12 @@ export default function Navbar() {
             {/* Menú de usuario */}
             {estaAutenticado ? (
               <div className="flex items-center space-x-4">
+                <Link
+                  to="/mis-pedidos"
+                  className="hover:text-blue-400 transition font-medium"
+                >
+                  📦 Mis Pedidos
+                </Link>
                 <span className="text-sm text-gray-300">
                   Hola, <span className="font-semibold">{usuario?.nombre}</span>
                 </span>

@@ -7,6 +7,7 @@ import {
   protegerRuta,
   RequestConUsuario,
 } from "../middlewares/auth.middleware";
+import { authLimiter } from "../middlewares/rateLimiter.middleware";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ const router = express.Router();
 // ==========================================
 router.post(
   "/registro",
+  authLimiter,
   [
     body("nombre")
       .trim()
@@ -103,6 +105,7 @@ router.post(
 // ==========================================
 router.post(
   "/login",
+  authLimiter,
   [
     body("email")
       .isEmail()
