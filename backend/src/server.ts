@@ -15,7 +15,18 @@ const PORT: number = parseInt(process.env.PORT || "5000");
 
 conectarDB();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://ecommerce-tienda-ropa-5dk7tb3mz-hernan-andres-zarachos-projects.vercel.app",
+      "https://ecommerce-tienda-ropa.vercel.app", // Por si Vercel asigna un dominio más corto
+      /\.vercel\.app$/, // Permite cualquier subdominio de vercel.app
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(apiLimiter); // 👈 APLICAR RATE LIMITER GLOBAL
 
