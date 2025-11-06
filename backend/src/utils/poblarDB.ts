@@ -3,8 +3,10 @@ import dotenv from "dotenv";
 import Producto from "../models/Producto";
 import { Categoria, Talla } from "../interfaces/producto.interface";
 
+// Cargar variables de entorno
 dotenv.config();
 
+// Datos iniciales de productos
 const productosIniciales = [
   // REMERAS
   {
@@ -112,6 +114,7 @@ const productosIniciales = [
   },
 ];
 
+// Poblar la base de datos
 const poblarDB = async (): Promise<void> => {
   try {
     // Verificar que exista MONGODB_URI

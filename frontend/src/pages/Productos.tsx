@@ -74,7 +74,7 @@ function Productos() {
       {/* HEADER */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-gray-800 mb-3">
-          🛍️ Catálogo de Productos
+          Catálogo de Productos
         </h1>
         <p className="text-xl text-gray-600">
           Mostrando {productos.length}{" "}

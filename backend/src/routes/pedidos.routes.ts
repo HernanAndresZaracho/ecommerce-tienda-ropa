@@ -16,6 +16,7 @@ const router = express.Router();
 // ==========================================
 router.post(
   "/",
+  // Middleware para proteger la ruta opcionalmente
   pedidosLimiter,
   [
     body("direccionEnvio.nombre")
@@ -60,9 +61,12 @@ router.post(
       let subtotal = 0;
       const itemsProcesados = [];
 
+      // Procesar cada item del pedido
       for (const item of items) {
+        // Buscar el producto en la base de datos
         const producto = await Producto.findById(item.productoId);
 
+        // Verificar si el producto existe
         if (!producto) {
           res.status(404).json({
             success: false,
@@ -80,9 +84,11 @@ router.post(
           return;
         }
 
+        // Calcular precio total del item
         const precioTotal = producto.precio * item.cantidad;
         subtotal += precioTotal;
 
+        // Agregar item procesado al array
         itemsProcesados.push({
           producto: producto._id,
           nombre: producto.nombre,
@@ -93,6 +99,7 @@ router.post(
         });
       }
 
+      // Calcular costos adicionales
       const costoEnvio = 0; // Envío gratis
       const total = subtotal + costoEnvio;
 
@@ -101,7 +108,8 @@ router.post(
 
       // Crear el pedido
       const nuevoPedido = new Pedido({
-        usuario: req.usuario?.id || null, // Si está autenticado, guardar su ID
+        // Si el usuario está autenticado, asociar el pedido a su ID
+        usuario: req.usuario?.id || null,
         direccionEnvio,
         items: itemsProcesados,
         subtotal,
@@ -111,6 +119,7 @@ router.post(
         qrData,
       });
 
+      // Guardar el pedido en la base de datos
       await nuevoPedido.save();
 
       // Actualizar stock de productos
@@ -120,6 +129,7 @@ router.post(
         });
       }
 
+      // Responder con los detalles del pedido creado
       res.status(201).json({
         success: true,
         mensaje: "Pedido creado exitosamente",
@@ -148,6 +158,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
+    // Validar que el ID sea un ObjectId válido
     if (!Types.ObjectId.isValid(id)) {
       res.status(400).json({
         success: false,
@@ -156,8 +167,10 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Buscar el pedido por ID
     const pedido = await Pedido.findById(id).populate("items.producto");
 
+    // Verificar si el pedido existe
     if (!pedido) {
       res.status(404).json({
         success: false,
@@ -166,6 +179,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Responder con los detalles del pedido
     res.status(200).json({
       success: true,
       data: pedido,
@@ -188,15 +202,18 @@ router.get(
   protegerRuta,
   async (req: RequestConUsuario, res: Response): Promise<void> => {
     try {
+      // Buscar pedidos del usuario autenticado
       const pedidos = await Pedido.find({ usuario: req.usuario?.id })
         .sort({ createdAt: -1 })
         .populate("items.producto");
 
+      // Responder con los pedidos encontrados
       res.status(200).json({
         success: true,
         data: pedidos,
       });
     } catch (error) {
+      // Manejo de errores
       console.error("Error al obtener pedidos del usuario:", error);
       res.status(500).json({
         success: false,
@@ -213,9 +230,12 @@ router.get(
 router.put(
   "/:id/confirmar-pago",
   async (req: Request, res: Response): Promise<void> => {
+    // Confirmar el pago del pedido
     try {
+      // Extraer el ID del pedido de los parámetros
       const { id } = req.params;
 
+      // Validar que el ID sea un ObjectId válido
       if (!Types.ObjectId.isValid(id)) {
         res.status(400).json({
           success: false,
@@ -224,6 +244,7 @@ router.put(
         return;
       }
 
+      // Actualizar el pedido para marcarlo como pagado
       const pedido = await Pedido.findByIdAndUpdate(
         id,
         {
@@ -258,4 +279,5 @@ router.put(
   }
 );
 
+// Exportar el router
 export default router;

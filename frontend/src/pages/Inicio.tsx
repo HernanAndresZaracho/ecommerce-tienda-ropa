@@ -15,7 +15,7 @@ export default function Inicio() {
         onClick={() => navigate("productos")}
         className="px-8 sm:px-10 py-3 sm:py-4 bg-primary text-white text-lg sm:text-xl font-bold rounded-lg hover:bg-blue-600 transition-colors duration-300 shadow-lg hover:shadow-xl"
       >
-        🛍️ Ver Productos
+        Ver Productos
       </button>
 
       {/* Features */}

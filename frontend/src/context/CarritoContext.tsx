@@ -15,7 +15,7 @@ interface CarritoContextType {
     producto: Producto,
     talla: string,
     cantidad: number
-  ) => void; // 👈
+  ) => void;
   eliminarDelCarrito: (productoId: string, talla: string) => void;
   actualizarCantidad: (
     productoId: string,

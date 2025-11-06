@@ -1,5 +1,6 @@
 import { Document, Types } from "mongoose";
 
+// Definición de los tipos e interfaces para el modelo Pedido
 export type EstadoPedido =
   | "pendiente"
   | "pagado"
@@ -7,6 +8,7 @@ export type EstadoPedido =
   | "entregado"
   | "cancelado";
 
+// Detalles de cada ítem en el pedido
 export interface ItemPedido {
   producto: Types.ObjectId;
   nombre: string;
@@ -16,6 +18,7 @@ export interface ItemPedido {
   imagen: string;
 }
 
+// Información de dirección de envío
 export interface DireccionEnvio {
   nombre: string;
   telefono: string;
@@ -26,17 +29,18 @@ export interface DireccionEnvio {
   codigoPostal: string;
 }
 
+// Interfaz principal del Pedido
 export interface IPedido extends Document {
-  // Usuario (opcional - puede ser null para invitados)
+  // Referencia al usuario (opcional para pedidos de invitados)
   usuario?: Types.ObjectId | null;
 
-  // Información de contacto (obligatoria siempre)
+  // Información de envío
   direccionEnvio: DireccionEnvio;
 
-  // Productos del pedido
+  // Ítems del pedido
   items: ItemPedido[];
 
-  // Totales
+  // Resumen de precios
   subtotal: number;
   costoEnvio: number;
   total: number;
@@ -44,15 +48,15 @@ export interface IPedido extends Document {
   // Estado del pedido
   estado: EstadoPedido;
 
-  // Pago
+  // Información de pago
   metodoPago: "qr" | "efectivo" | "tarjeta";
   pagado: boolean;
   fechaPago?: Date;
 
-  // QR de pago
+  // Datos adicionales para pagos con QR
   qrData?: string;
 
-  // Fechas
+  // Marcas de tiempo
   createdAt: Date;
   updatedAt: Date;
 }

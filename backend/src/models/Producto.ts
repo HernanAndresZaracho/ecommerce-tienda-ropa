@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { IProducto, Categoria, Talla } from "../interfaces/producto.interface";
 
+// Definición del esquema para el modelo Producto
 const ProductoSchema: Schema = new Schema<IProducto>(
   {
     nombre: {
@@ -58,9 +59,12 @@ const ProductoSchema: Schema = new Schema<IProducto>(
     },
   },
   {
+    // Opciones del esquema
     timestamps: true,
+    // Desactivar la versión (__v)
     versionKey: false,
   }
 );
 
+// Exportación del modelo Producto
 export default mongoose.model<IProducto>("Producto", ProductoSchema);

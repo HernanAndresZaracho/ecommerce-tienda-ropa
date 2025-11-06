@@ -7,17 +7,21 @@ const router = Router();
 /** GET /api/productos
  * Obtener todos los productos activos */
 router.get("/", async (req: Request, res: Response): Promise<void> => {
+  // Obtener todos los productos activos
   try {
+    // Buscar productos activos y ordenarlos por fecha de creación descendente
     const productos = await Producto.find({ activo: true }).sort({
       createdAt: -1,
     });
 
+    // Responder con la lista de productos
     res.json({
       success: true,
       cantidad: productos.length,
       productos,
     });
   } catch (error) {
+    // Manejar errores
     console.error("Error al obtener productos:", error);
     res.status(500).json({
       success: false,
@@ -32,11 +36,14 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
 router.get(
   "/categoria/:categoria",
   async (req: Request, res: Response): Promise<void> => {
+    // Obtener productos por categoría
     try {
+      // Extraer categoría de los parámetros de la ruta
       const { categoria } = req.params;
 
       // Validar categoría
       const categoriasValidas: Categoria[] = ["remera", "camisa", "pantalon"];
+      // Verificar si la categoría proporcionada es válida
       if (!categoriasValidas.includes(categoria.toLowerCase() as Categoria)) {
         res.status(400).json({
           success: false,
@@ -47,11 +54,13 @@ router.get(
         return;
       }
 
+      // Buscar productos activos en la categoría especificada y ordenarlos por fecha de creación descendente
       const productos = await Producto.find({
         categoria: categoria.toLowerCase(),
         activo: true,
       }).sort({ createdAt: -1 });
 
+      // Responder con la lista de productos encontrados
       res.json({
         success: true,
         categoria,
@@ -72,9 +81,12 @@ router.get(
 /** GET /api/productos/:id
  * Obtener un producto por ID*/
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
+  // Obtener un producto por su ID
   try {
+    // Buscar el producto por ID
     const producto = await Producto.findById(req.params.id);
 
+    // Verificar si el producto existe
     if (!producto) {
       res.status(404).json({
         success: false,
@@ -83,6 +95,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Verificar si el producto está activo
     if (!producto.activo) {
       res.status(404).json({
         success: false,
@@ -91,6 +104,7 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Responder con el producto encontrado
     res.json({
       success: true,
       producto,
@@ -105,4 +119,5 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// Exportar el router de productos
 export default router;

@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { IUsuario } from "../interfaces/usuario.interface";
 
+// Definición del esquema de Usuario
 const UsuarioSchema: Schema = new Schema<IUsuario>(
   {
     nombre: {
@@ -22,11 +23,14 @@ const UsuarioSchema: Schema = new Schema<IUsuario>(
         "Por favor ingrese un email válido",
       ],
     },
+    // Contraseña del usuario
     password: {
       type: String,
       required: [true, "La contraseña es obligatoria"],
       minlength: [6, "La contraseña debe tener al menos 6 caracteres"],
-      select: false, // No se devuelve por defecto en las consultas
+      // Hashear la contraseña antes de guardar
+      // No devolver el campo password en las consultas por defecto
+      select: false,
     },
     telefono: {
       type: String,
@@ -76,7 +80,9 @@ UsuarioSchema.pre("save", async function (next) {
 UsuarioSchema.methods.compararPassword = async function (
   passwordIngresado: string
 ): Promise<boolean> {
+  // Asegurar que this.password es string
   return await bcrypt.compare(passwordIngresado, this.password);
 };
 
+// Exportar el modelo de Usuario
 export default mongoose.model<IUsuario>("Usuario", UsuarioSchema);

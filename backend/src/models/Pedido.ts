@@ -1,9 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 import { IPedido, EstadoPedido } from "../interfaces/pedido.interface";
 
+// Subdocumento para los items del pedido
 const ItemPedidoSchema = new Schema(
   {
+    // Referencia al producto
     producto: {
+      // ID del producto
       type: Schema.Types.ObjectId,
       ref: "Producto",
       required: true,
@@ -31,9 +34,11 @@ const ItemPedidoSchema = new Schema(
       required: true,
     },
   },
+  // No necesitamos un _id para los subdocumentos de items
   { _id: false }
 );
 
+// Subdocumento para la dirección de envío
 const DireccionEnvioSchema = new Schema(
   {
     nombre: {
@@ -73,9 +78,11 @@ const DireccionEnvioSchema = new Schema(
       trim: true,
     },
   },
+  // No necesitamos un _id para el subdocumento de dirección
   { _id: false }
 );
 
+// Esquema principal del pedido
 const PedidoSchema: Schema = new Schema<IPedido>(
   {
     usuario: {
@@ -140,9 +147,12 @@ const PedidoSchema: Schema = new Schema<IPedido>(
     },
   },
   {
+    // Agregar timestamps automáticos
     timestamps: true,
+    // Deshabilitar el campo __v
     versionKey: false,
   }
 );
 
+// Exportar el modelo Pedido
 export default mongoose.model<IPedido>("Pedido", PedidoSchema);

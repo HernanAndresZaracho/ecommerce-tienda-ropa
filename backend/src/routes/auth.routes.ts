@@ -9,6 +9,7 @@ import {
 } from "../middlewares/auth.middleware";
 import { authLimiter } from "../middlewares/rateLimiter.middleware";
 
+// Crear router
 const router = express.Router();
 
 // ==========================================
@@ -76,6 +77,7 @@ router.post(
         rol: nuevoUsuario.rol,
       });
 
+      // Responder con datos del usuario y token
       res.status(201).json({
         success: true,
         mensaje: "Usuario registrado exitosamente",
@@ -127,9 +129,10 @@ router.post(
 
       const { email, password } = req.body;
 
-      // Buscar usuario por email (incluir password que normalmente está oculto)
+      // Buscar usuario por email y traer el campo password
       const usuario = await Usuario.findOne({ email }).select("+password");
 
+      // Verificar si el usuario existe
       if (!usuario) {
         res.status(401).json({
           success: false,
@@ -150,6 +153,7 @@ router.post(
       // Comparar contraseñas
       const passwordCorrecto = await usuario.compararPassword(password);
 
+      // Si la contraseña es incorrecta
       if (!passwordCorrecto) {
         res.status(401).json({
           success: false,
@@ -165,6 +169,7 @@ router.post(
         rol: usuario.rol,
       });
 
+      // Responder con datos del usuario y token
       res.status(200).json({
         success: true,
         mensaje: "Inicio de sesión exitoso",
@@ -196,11 +201,13 @@ router.post(
 // ==========================================
 router.get(
   "/perfil",
+  // Middleware para proteger la ruta
   protegerRuta,
   async (req: RequestConUsuario, res: Response): Promise<void> => {
     try {
       const usuario = await Usuario.findById(req.usuario?.id);
 
+      // Verificar si el usuario existe
       if (!usuario) {
         res.status(404).json({
           success: false,
@@ -209,6 +216,7 @@ router.get(
         return;
       }
 
+      // Responder con datos del usuario
       res.status(200).json({
         success: true,
         data: {
@@ -223,6 +231,7 @@ router.get(
       });
     } catch (error) {
       console.error("Error al obtener perfil:", error);
+      // Manejo de errores
       res.status(500).json({
         success: false,
         mensaje: "Error al obtener perfil",
@@ -261,8 +270,10 @@ router.put(
         return;
       }
 
+      // Extraer campos a actualizar
       const { nombre, telefono, direccion } = req.body;
 
+      // Actualizar usuario
       const usuario = await Usuario.findByIdAndUpdate(
         req.usuario?.id,
         {
@@ -274,6 +285,7 @@ router.put(
       );
 
       if (!usuario) {
+        // Verificar si el usuario existe
         res.status(404).json({
           success: false,
           mensaje: "Usuario no encontrado",
@@ -281,6 +293,7 @@ router.put(
         return;
       }
 
+      // Responder con datos actualizados
       res.status(200).json({
         success: true,
         mensaje: "Perfil actualizado exitosamente",
@@ -294,6 +307,7 @@ router.put(
       });
     } catch (error) {
       console.error("Error al actualizar perfil:", error);
+      // Manejo de errores
       res.status(500).json({
         success: false,
         mensaje: "Error al actualizar perfil",
@@ -303,4 +317,5 @@ router.put(
   }
 );
 
+// Exportar el router
 export default router;

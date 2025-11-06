@@ -1,5 +1,6 @@
 import { Document } from "mongoose";
 
+// Definición de la interfaz para el modelo de Usuario
 export interface IUsuario extends Document {
   nombre: string;
   email: string;
@@ -11,9 +12,11 @@ export interface IUsuario extends Document {
     provincia: string;
     codigoPostal: string;
   };
+  // El rol puede ser "cliente" o "admin"
   rol: "cliente" | "admin";
   activo: boolean;
   createdAt: Date;
   updatedAt: Date;
+  // Método para comparar contraseñas
   compararPassword(passwordIngresado: string): Promise<boolean>;
 }

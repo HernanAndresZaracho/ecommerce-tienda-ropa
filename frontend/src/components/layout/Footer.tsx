@@ -11,9 +11,6 @@ function Footer() {
           {/* Columna 1: Info de la tienda */}
           <div className="text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
-              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-xl">🛍️</span>
-              </div>
               <h3 className="text-xl font-bold">Tienda de Ropa</h3>
             </div>
             <p className="text-sm text-gray-400">

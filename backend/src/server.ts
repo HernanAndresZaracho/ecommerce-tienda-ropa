@@ -5,7 +5,7 @@ import conectarDB from "./config/database";
 import productosRoutes from "./routes/productos.routes";
 import authRoutes from "./routes/auth.routes";
 import pedidosRoutes from "./routes/pedidos.routes";
-import { apiLimiter } from "./middlewares/rateLimiter.middleware"; // 👈 NUEVO
+import { apiLimiter } from "./middlewares/rateLimiter.middleware";
 
 dotenv.config();
 
@@ -28,7 +28,8 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(apiLimiter); // 👈 APLICAR RATE LIMITER GLOBAL
+// APLICAR RATE LIMITER GLOBAL
+app.use(apiLimiter);
 
 // Ruta de prueba
 app.get("/", (req: Request, res: Response) => {
@@ -48,7 +49,7 @@ app.get("/", (req: Request, res: Response) => {
 // Ruta raíz
 app.get("/api/test", (req: Request, res: Response) => {
   res.json({
-    mensaje: "Backend funcionando con TypeScript! 🚀",
+    mensaje: "Backend funcionando con TypeScript!",
     fecha: new Date().toLocaleString(),
     tecnologia: "TypeScript + Express + MongoDB + JWT + Pedidos + Seguridad",
     database: "Conectado",

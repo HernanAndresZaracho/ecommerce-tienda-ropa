@@ -4,14 +4,14 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
 import { CarritoProvider } from "./context/CarritoContext.tsx";
-import { AuthProvider } from "./context/AuthContext.tsx"; // 👈 NUEVO
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         {" "}
-        {/* 👈 NUEVO - AuthProvider envuelve todo */}
+        {/* AuthProvider envuelve todo */}
         <CarritoProvider>
           <App />
         </CarritoProvider>

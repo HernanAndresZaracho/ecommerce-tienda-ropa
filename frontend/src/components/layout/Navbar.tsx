@@ -19,7 +19,7 @@ export default function Navbar() {
             to="/"
             className="text-2xl font-bold hover:text-blue-400 transition"
           >
-            🛍️ StyleStore
+            StyleStore
           </Link>
 
           {/* Links de navegación - DERECHA */}
