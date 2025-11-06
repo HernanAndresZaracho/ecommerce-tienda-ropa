@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from "../config/api.config";
 import { Producto, RespuestaProductos } from "../interfaces/producto.interface";
 import Loading from "../components/ui/Loading";
 import ErrorMessage from "../components/ui/ErrorMessage";
-import ProductoCard from "../components/productos/ProductoCard"; // ⭐ IMPORTAR
+import ProductoCard from "../components/productos/ProductoCard";
 
 function Productos() {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -13,11 +13,15 @@ function Productos() {
 
   useEffect(() => {
     const obtenerProductos = async (): Promise<void> => {
+      console.log("🔍 URL de productos:", API_ENDPOINTS.productos);
+
       try {
         setCargando(true);
         const respuesta = await axios.get<RespuestaProductos>(
           API_ENDPOINTS.productos
         );
+
+        console.log("Respuesta del backend:", respuesta.data);
 
         if (respuesta.data.success) {
           setProductos(respuesta.data.productos);
@@ -26,8 +30,8 @@ function Productos() {
           setError("No se pudieron cargar los productos");
         }
       } catch (err) {
+        console.error("Error completo:", err);
         setError("Error al conectar con el servidor");
-        console.error("Error al obtener productos:", err);
       } finally {
         setCargando(false);
       }
