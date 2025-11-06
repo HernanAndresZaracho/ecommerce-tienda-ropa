@@ -5,9 +5,9 @@ import BotonCarrito from "./components/ui/BotonCarrito";
 import Inicio from "./pages/Inicio";
 import Productos from "./pages/Productos";
 import Carrito from "./pages/Carrito";
-import Checkout from "./pages/Checkout"; // 👈 NUEVO
-import Confirmacion from "./pages/Confirmacion"; // 👈 NUEVO
-import MisPedidos from "./pages/MisPedidos"; // 👈 NUEVO
+import Checkout from "./pages/Checkout";
+import Confirmacion from "./pages/Confirmacion";
+import MisPedidos from "./pages/MisPedidos";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import NotFound from "./pages/NotFound";
@@ -21,14 +21,9 @@ function App() {
           <Route path="/" element={<Inicio />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/carrito" element={<Carrito />} />
-          <Route path="/checkout" element={<Checkout />} /> {/* 👈 NUEVO */}
-          <Route
-            path="/confirmacion/:pedidoId"
-            element={<Confirmacion />}
-          />{" "}
-          {/* 👈 NUEVO */}
-          <Route path="/mis-pedidos" element={<MisPedidos />} />{" "}
-          {/* 👈 NUEVO */}
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/confirmacion/:pedidoId" element={<Confirmacion />} />
+          <Route path="/mis-pedidos" element={<MisPedidos />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
           <Route path="*" element={<NotFound />} />
