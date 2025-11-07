@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-// Variables de tema personalizado
 @theme {
   --color-primary: #3498db;
   --color-secondary: #2c3e50;
@@ -9,7 +8,6 @@
   --color-warning: #f39c12;
 }
 
-/* Animación para menú móvil */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -21,12 +19,10 @@
   }
 }
 
-// Clase para aplicar la animación de fadeIn
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Animación de pulso suave */
 @keyframes pulse-soft {
   0%,
   100% {
@@ -37,33 +33,27 @@
   }
 }
 
-// Clase para aplicar la animación de pulso suave
 .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;
 }
 
-/* Scroll suave */
 html {
   scroll-behavior: smooth;
 }
 
-/* Estilos personalizados para scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
-// Estilos para el track y thumb del scrollbar
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-// Estilos para el thumb del scrollbar
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 5px;
 }
 
-// Estilos para el thumb del scrollbar al pasar el cursor sobre él
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
