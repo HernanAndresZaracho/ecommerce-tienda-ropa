@@ -14,7 +14,7 @@
           "value": "nosniff"
         },
         {
-          "key": "X-Frame-Option",
+          "key": "X-Frame-Options",
           "value": "DENY"
         },
         {
