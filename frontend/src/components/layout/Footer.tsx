@@ -1,4 +1,5 @@
-import { CiLinkedin, CiInstagram, CiTwitter } from "react-icons/ci";
+import { CiLinkedin, CiInstagram } from "react-icons/ci";
+import { FaGithub } from "react-icons/fa";
 
 // Componente Footer
 function Footer() {
@@ -73,13 +74,13 @@ function Footer() {
                 <CiLinkedin size={24} />
               </a>
               <a
-                href="https://x.com/hernan_zaracho"
+                href="https://github.com/HernanAndresZaracho/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Twitter"
+                aria-label="GitHub"
                 className="hover:text-white/80"
               >
-                <CiTwitter size={24} />
+                <FaGithub size={24} />
               </a>
               <a
                 href="https://www.instagram.com/hernan_andres_zaracho/"
