@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 import conectarDB from "./config/database";
@@ -15,20 +16,35 @@ const PORT: number = parseInt(process.env.PORT || "5000");
 
 conectarDB();
 
+// Middlewares de seguridad
+// Helmet para proteger cabeceras HTTP
+app.use(
+  helmet({
+    // Desactivar CSP en backend (se maneja en frontend)
+    contentSecurityPolicy: false,
+    // Desactivar COEP para evitar conflictos con recursos de terceros
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
+// Configuración de CORS
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
       "https://ecommerce-tienda-ropa-5dk7tb3mz-hernan-andres-zarachos-projects.vercel.app",
-      "https://ecommerce-tienda-ropa.vercel.app", // Por si Vercel asigna un dominio más corto
-      /\.vercel\.app$/, // Permite cualquier subdominio de vercel.app
+      // Por si Vercel asigna un dominio más corto
+      "https://ecommerce-tienda-ropa.vercel.app",
+      // Permite cualquier subdominio de vercel.app
+      /\.vercel\.app$/,
     ],
     credentials: true,
   })
 );
+// Middleware para parsear JSON
 app.use(express.json());
-// APLICAR RATE LIMITER GLOBAL
+// Aplicar limitador de tasa a todas las rutas de la API
 app.use(apiLimiter);
 
 // Ruta de prueba
