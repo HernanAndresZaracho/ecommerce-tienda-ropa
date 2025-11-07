@@ -1,8 +1,10 @@
+// Componente Loading que muestra un spinner de carga y un mensaje opcional
 interface LoadingProps {
   mensaje?: string;
   tamano?: "small" | "medium" | "large";
 }
 
+// Componente Loading
 function Loading({ mensaje = "Cargando...", tamano = "medium" }: LoadingProps) {
   const tamanos = {
     small: "w-8 h-8",
@@ -10,6 +12,7 @@ function Loading({ mensaje = "Cargando...", tamano = "medium" }: LoadingProps) {
     large: "w-24 h-24",
   };
 
+  // Renderizar el componente de carga
   return (
     <div className="flex flex-col items-center justify-center py-12">
       {/* Spinner */}

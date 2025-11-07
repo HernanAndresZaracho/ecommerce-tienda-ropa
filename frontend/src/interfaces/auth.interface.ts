@@ -39,7 +39,7 @@ export interface RespuestaAuth {
 }
 
 /**
- * Context de autenticación
+ * Contexto de autenticación
  */
 export interface AuthContextType {
   usuario: Usuario | null;

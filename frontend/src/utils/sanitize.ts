@@ -13,6 +13,7 @@ export const sanitizeString = (str: string): string => {
  * Sanitiza un email
  */
 export const sanitizeEmail = (email: string): string => {
+  // Remover espacios y convertir a minúsculas
   return email.toLowerCase().trim();
 };
 
@@ -20,6 +21,7 @@ export const sanitizeEmail = (email: string): string => {
  * Valida que un string no contenga SQL injection básico
  */
 export const containsSQLInjection = (str: string): boolean => {
+  // Patrones comunes de SQL injection
   const sqlPatterns = [
     /(\bOR\b|\bAND\b).*=/i,
     /UNION.*SELECT/i,
@@ -27,5 +29,6 @@ export const containsSQLInjection = (str: string): boolean => {
     /INSERT.*INTO/i,
     /DELETE.*FROM/i,
   ];
+  // Verificar si alguno de los patrones coincide
   return sqlPatterns.some((pattern) => pattern.test(str));
 };

@@ -1,18 +1,23 @@
+// Componente ErrorMessage que muestra un mensaje de error con un título, un mensaje descriptivo
+// y un botón opcional para recargar la página.
 interface ErrorMessageProps {
   titulo?: string;
   mensaje: string;
   mostrarBotonRecargar?: boolean;
 }
 
+// Componente ErrorMessage
 function ErrorMessage({
   titulo = "❌ Error",
   mensaje,
   mostrarBotonRecargar = true,
 }: ErrorMessageProps) {
+  // Función para recargar la página
   const recargarPagina = () => {
     window.location.reload();
   };
 
+  // Renderizar el mensaje de error
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4">
       <div className="max-w-md w-full bg-red-50 border-2 border-red-200 rounded-xl p-8 text-center">

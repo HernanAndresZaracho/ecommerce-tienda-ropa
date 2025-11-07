@@ -1,26 +1,31 @@
 import { CiLinkedin, CiInstagram, CiTwitter } from "react-icons/ci";
 
+// Componente Footer
 function Footer() {
   const añoActual = new Date().getFullYear();
 
   return (
     <footer className="bg-linear-to-r from-gray-800 via-gray-700 to-gray-800 text-white mt-auto border-t-2 border-gray-600">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Contenido principal */}
+        {/* Sección principal del footer */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-          {/* Columna 1: Info de la tienda */}
+          {/* Columna 1: Información de la tienda */}
           <div className="text-center md:text-left">
+            {/* Logo e información de la tienda */}
             <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
               <h3 className="text-xl font-bold">Tienda de Ropa</h3>
             </div>
+            {/* Descripción breve */}
             <p className="text-sm text-gray-400">
               Tu tienda online de confianza para ropa de calidad
             </p>
           </div>
 
-          {/* Columna 2: Enlaces */}
+          {/* Columna 2: Enlaces rápidos */}
           <div className="text-center">
+            {/* Enlaces rápidos a secciones importantes */}
             <h4 className="font-bold mb-3 text-primary">Enlaces Rápidos</h4>
+            {/* Lista de enlaces */}
             <ul className="space-y-2 text-sm text-gray-400">
               <li className="hover:text-white transition-colors cursor-pointer">
                 📦 Productos
@@ -34,9 +39,11 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Columna 3: Tecnologías */}
+          {/* Columna 3: Tecnologías utilizadas */}
           <div className="text-center md:text-right">
-            <h4 className="font-bold mb-3 text-primary">Tecnologías</h4>
+            <h4 className="font-bold mb-3 text-primary">
+              Tecnologías Utilizadas
+            </h4>
             <div className="flex flex-wrap justify-center md:justify-end gap-2 text-xs">
               <span className="bg-blue-600 px-3 py-1 rounded-full">
                 TypeScript
@@ -84,11 +91,12 @@ function Footer() {
                 <CiInstagram size={24} />
               </a>
             </div>
+            {/* Derechos de autor y créditos */}
             <p className="text-sm text-gray-400">
               © {añoActual} Tienda de Ropa. Todos los derechos reservados.
             </p>
             <p className="text-xs text-gray-500">
-              Desarrollado con ❤️ por el Equipo
+              Desarrollado con ❤️ por Zaracho
             </p>
           </div>
         </div>

@@ -1,3 +1,4 @@
+// Definición de interfaces relacionadas con el usuario
 export interface Usuario {
   id: string;
   nombre: string;
@@ -12,6 +13,7 @@ export interface Usuario {
   };
 }
 
+// Respuesta estándar para autenticación
 export interface AuthResponse {
   success: boolean;
   mensaje: string;
@@ -21,11 +23,13 @@ export interface AuthResponse {
   };
 }
 
+// Credenciales para login
 export interface LoginCredenciales {
   email: string;
   password: string;
 }
 
+// Datos para registro de nuevo usuario
 export interface RegistroData {
   nombre: string;
   email: string;

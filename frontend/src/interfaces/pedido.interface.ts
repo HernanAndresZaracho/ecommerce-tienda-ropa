@@ -1,3 +1,4 @@
+// Interfaces relacionadas con los pedidos
 export interface DireccionEnvio {
   nombre: string;
   telefono: string;
@@ -8,6 +9,7 @@ export interface DireccionEnvio {
   codigoPostal: string;
 }
 
+// Detalles de cada item en el pedido
 export interface ItemPedido {
   productoId: string;
   nombre: string;
@@ -17,12 +19,14 @@ export interface ItemPedido {
   imagen: string;
 }
 
+// Datos necesarios para crear un nuevo pedido
 export interface CrearPedidoData {
   direccionEnvio: DireccionEnvio;
   items: ItemPedido[];
   metodoPago: "qr" | "efectivo" | "tarjeta";
 }
 
+// Estructura completa de un pedido
 export interface Pedido {
   _id: string;
   direccionEnvio: DireccionEnvio;

@@ -3,27 +3,36 @@ import { Producto } from "../../interfaces/producto.interface";
 import { useCarrito } from "../../context/CarritoContext";
 import SelectorTalla from "./SelectorTalla";
 
+// Props del componente
 interface ProductoCardProps {
   producto: Producto;
 }
 
+// Componente ProductoCard
 function ProductoCard({ producto }: ProductoCardProps) {
+  // Estado y contexto
   const { agregarAlCarrito } = useCarrito();
+  // Estado para la talla seleccionada y mensaje de confirmación
   const [tallaSeleccionada, setTallaSeleccionada] = useState<string | null>(
     null
   );
+  // Estado para mostrar mensaje de confirmación
   const [mostrandoMensaje, setMostrandoMensaje] = useState(false);
 
+  // Manejar agregar al carrito
   const handleAgregarAlCarrito = () => {
+    // Validar que se haya seleccionado una talla
     if (!tallaSeleccionada) {
       alert("Por favor selecciona una talla");
       return;
     }
 
+    // Agregar al carrito
     agregarAlCarrito(producto, tallaSeleccionada, 1);
 
     // Mostrar mensaje de confirmación
     setMostrandoMensaje(true);
+    // Ocultar mensaje después de 2 segundos
     setTimeout(() => setMostrandoMensaje(false), 2000);
 
     // Resetear talla seleccionada
@@ -31,15 +40,17 @@ function ProductoCard({ producto }: ProductoCardProps) {
   };
 
   return (
+    // Tarjeta del producto
     <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative">
       {/* Mensaje de confirmación */}
       {mostrandoMensaje && (
+        // Mensaje superpuesto
         <div className="absolute top-4 left-4 right-4 bg-success text-white px-4 py-2 rounded-lg z-10 animate-fadeIn text-center font-bold">
           ✓ Agregado al carrito
         </div>
       )}
 
-      {/* IMAGEN */}
+      {/* Imagen del producto */}
       <div className="relative h-80 overflow-hidden bg-gray-100">
         <img
           src={producto.imagen}
@@ -52,33 +63,36 @@ function ProductoCard({ producto }: ProductoCardProps) {
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
       </div>
 
-      {/* INFORMACIÓN */}
+      {/* Información del producto */}
       <div className="p-6">
-        {/* NOMBRE */}
+        {/* Nombre del producto */}
         <h3 className="text-xl font-bold text-gray-800 mb-3 h-14 line-clamp-2">
           {producto.nombre}
         </h3>
 
-        {/* DESCRIPCIÓN */}
+        {/* Descripción del producto */}
         <p className="text-sm text-gray-600 mb-4 h-16 line-clamp-3">
           {producto.descripcion}
         </p>
 
-        {/* PRECIO Y STOCK */}
+        {/* Precio y stock */}
         <div className="flex justify-between items-center mb-4">
           <span className="text-3xl font-bold text-accent">
-            ${producto.precio.toLocaleString("es-AR")}
+            {/* Precio del producto */}$
+            {producto.precio.toLocaleString("es-AR")}
           </span>
           <span
             className={`text-sm font-bold ${
+              /* Indicador de stock */
               producto.stock > 0 ? "text-success" : "text-red-500"
             }`}
           >
+            {/* Indicador de stock */}
             {producto.stock > 0 ? `✓ Stock: ${producto.stock}` : "✗ Sin stock"}
           </span>
         </div>
 
-        {/* SELECTOR DE TALLA */}
+        {/* Selector de talla */}
         {producto.stock > 0 && (
           <SelectorTalla
             tallas={producto.tallas}
@@ -87,7 +101,7 @@ function ProductoCard({ producto }: ProductoCardProps) {
           />
         )}
 
-        {/* BOTÓN AGREGAR AL CARRITO */}
+        {/* Botón agregar al carrito */}
         <button
           onClick={handleAgregarAlCarrito}
           disabled={producto.stock === 0}

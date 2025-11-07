@@ -10,7 +10,9 @@ export const API_URL = `${API_BASE_URL}/api`;
 export const API_ENDPOINTS = {
   // Productos
   productos: `${API_URL}/productos`,
+  // Obtener un producto por su ID
   productoPorId: (id: string) => `${API_URL}/productos/${id}`,
+  // Obtener productos por categoría
   productosPorCategoria: (categoria: string) =>
     `${API_URL}/productos/categoria/${categoria}`,
 

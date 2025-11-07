@@ -1,21 +1,27 @@
 import { Talla } from "../../interfaces/producto.interface";
 
+// Props del componente SelectorTalla
 interface SelectorTallaProps {
   tallas: Talla[];
   tallaSeleccionada: string | null;
   onSeleccionar: (talla: string) => void;
 }
 
+// Componente SelectorTalla
 function SelectorTalla({
   tallas,
   tallaSeleccionada,
   onSeleccionar,
 }: SelectorTallaProps) {
+  // Renderizado del componente
   return (
+    // Contenedor principal
     <div className="mb-4">
+      {/* Etiqueta del selector de talla */}
       <label className="block text-sm font-semibold text-gray-700 mb-2">
         Selecciona tu talla:
       </label>
+      {/* Botones de tallas */}
       <div className="flex gap-2 flex-wrap">
         {tallas.map((talla) => (
           <button

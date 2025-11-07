@@ -12,11 +12,16 @@ import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import NotFound from "./pages/NotFound";
 
+// Componente principal de la aplicación
 function App() {
+  // Estructura de la aplicación con rutas y componentes comunes
   return (
+    // Contenedor principal con diseño de columna y altura mínima de pantalla
     <div className="flex flex-col min-h-screen">
+      {/* Barra de navegación en la parte superior */}
       <Navbar />
       <main className="grow">
+        {/* Definición de rutas para diferentes páginas */}
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/productos" element={<Productos />} />
