@@ -8,6 +8,7 @@ import {
 } from "../middlewares/auth.middleware";
 import { Types } from "mongoose";
 import { pedidosLimiter } from "../middlewares/rateLimiter.middleware";
+import { verificarToken } from "../utils/jwt.util";
 
 const router = express.Router();
 
@@ -141,6 +142,158 @@ router.post(
         },
       });
     } catch (error) {
+      console.error("Error al crear pedido:", error);
+      res.status(500).json({
+        success: false,
+        mensaje: "Error al crear pedido",
+        error: error instanceof Error ? error.message : "Error desconocido",
+      });
+    }
+  }
+);
+
+// ==========================================
+// POST /api/pedidos - Crear nuevo pedido
+// ==========================================
+router.post(
+  "/",
+  [
+    body("direccionEnvio.nombre")
+      .notEmpty()
+      .withMessage("El nombre es obligatorio"),
+    body("direccionEnvio.telefono")
+      .notEmpty()
+      .withMessage("El teléfono es obligatorio"),
+    body("direccionEnvio.email")
+      .isEmail()
+      .withMessage("Debe proporcionar un email válido"),
+    body("direccionEnvio.calle")
+      .notEmpty()
+      .withMessage("La calle es obligatoria"),
+    body("direccionEnvio.ciudad")
+      .notEmpty()
+      .withMessage("La ciudad es obligatoria"),
+    body("direccionEnvio.provincia")
+      .notEmpty()
+      .withMessage("La provincia es obligatoria"),
+    body("direccionEnvio.codigoPostal")
+      .notEmpty()
+      .withMessage("El código postal es obligatorio"),
+    body("items")
+      .isArray({ min: 1 })
+      .withMessage("Debe haber al menos un producto"),
+  ],
+  async (req: RequestConUsuario, res: Response): Promise<void> => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(400).json({
+          success: false,
+          errores: errors.array(),
+        });
+        return;
+      }
+
+      const { direccionEnvio, items, metodoPago } = req.body;
+
+      // Obtener el ID del usuario del token si está autenticado
+      let usuarioId = null;
+      const authHeader = req.headers.authorization;
+
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        try {
+          const token = authHeader.split(" ")[1];
+          const decoded = verificarToken(token);
+          usuarioId = decoded.id; // 👈 EXTRAER ID DEL TOKEN
+        } catch (error) {
+          console.log(
+            "Token inválido o no proporcionado, creando pedido como invitado"
+          );
+        }
+      }
+
+      // Validar que los productos existan y calcular totales
+      let subtotal = 0;
+      const itemsProcesados = [];
+
+      // Procesar cada item del pedido
+      for (const item of items) {
+        // Buscar el producto en la base de datos
+        const producto = await Producto.findById(item.productoId);
+
+        // Verificar si el producto existe
+        if (!producto) {
+          res.status(404).json({
+            success: false,
+            mensaje: `Producto con ID ${item.productoId} no encontrado`,
+          });
+          return;
+        }
+
+        // Verificar stock
+        if (producto.stock < item.cantidad) {
+          res.status(400).json({
+            success: false,
+            mensaje: `Stock insuficiente para ${producto.nombre}`,
+          });
+          return;
+        }
+
+        // Calcular precio total del item
+        const precioTotal = producto.precio * item.cantidad;
+        subtotal += precioTotal;
+
+        // Agregar item procesado al array
+        itemsProcesados.push({
+          producto: producto._id,
+          nombre: producto.nombre,
+          precio: producto.precio,
+          cantidad: item.cantidad,
+          talla: item.talla,
+          imagen: producto.imagen,
+        });
+      }
+
+      // Calcular costos adicionales
+      const costoEnvio = 0;
+      const total = subtotal + costoEnvio;
+      const qrData = `PAGO_${Date.now()}_${total}`;
+
+      // Crear el pedido por invitado o usuario autenticado
+      const nuevoPedido = new Pedido({
+        usuario: usuarioId,
+        direccionEnvio,
+        items: itemsProcesados,
+        subtotal,
+        costoEnvio,
+        total,
+        metodoPago: metodoPago || "qr",
+        qrData,
+      });
+
+      // Guardar el pedido en la base de datos
+      await nuevoPedido.save();
+
+      // Actualizar stock
+      for (const item of items) {
+        await Producto.findByIdAndUpdate(item.productoId, {
+          $inc: { stock: -item.cantidad },
+        });
+      }
+
+      // Responder con los detalles del pedido creado
+      res.status(201).json({
+        success: true,
+        mensaje: "Pedido creado exitosamente",
+        data: {
+          pedidoId: nuevoPedido._id,
+          total,
+          qrData,
+          estado: nuevoPedido.estado,
+        },
+      });
+    } catch (error) {
+      // Manejo de errores
       console.error("Error al crear pedido:", error);
       res.status(500).json({
         success: false,

@@ -73,34 +73,68 @@ export const CarritoProvider = ({ children }: CarritoProviderProps) => {
 
   // Sincronizar carrito cuando el usuario cambie (login/logout)
   useEffect(() => {
-    // Si hay usuario autenticado
     if (usuario) {
       // Usuario autenticado: cargar su carrito
       const carritoUsuarioKey = `carrito_${usuario.id}`;
-      // Buscar carrito guardado del usuario
+      // Obtener carrito guardado del usuario y del invitado
       const carritoGuardado = localStorage.getItem(carritoUsuarioKey);
+      // Obtener carrito de invitado
+      const carritoInvitado = localStorage.getItem("carrito");
 
-      // Si tiene carrito guardado, cargarlo
       if (carritoGuardado) {
-        // Intentar parsear el JSON
         try {
-          setItems(JSON.parse(carritoGuardado));
+          const itemsUsuario = JSON.parse(carritoGuardado);
+
+          // Si hay carrito de invitado, combinarlo
+          if (carritoInvitado && items.length > 0) {
+            // Combinar: agregar productos de invitado que no estén en el carrito del usuario
+            const itemsCombinados = [...itemsUsuario];
+
+            // Parsear carrito de invitado
+            items.forEach((itemInvitado) => {
+              const existe = itemsUsuario.find(
+                (itemUsuario: ItemCarrito) =>
+                  itemUsuario.producto._id === itemInvitado.producto._id &&
+                  itemUsuario.talla === itemInvitado.talla
+              );
+
+              // Si no existe, agregarlo
+              if (!existe) {
+                itemsCombinados.push(itemInvitado);
+              } else {
+                // Si existe, sumar cantidades
+                const index = itemsCombinados.findIndex(
+                  (item: ItemCarrito) =>
+                    item.producto._id === itemInvitado.producto._id &&
+                    item.talla === itemInvitado.talla
+                );
+                itemsCombinados[index].cantidad += itemInvitado.cantidad;
+              }
+            });
+
+            // Actualizar estado y guardar carrito combinado
+            setItems(itemsCombinados);
+            localStorage.setItem(
+              carritoUsuarioKey,
+              JSON.stringify(itemsCombinados)
+            );
+            localStorage.removeItem("carrito");
+          } else {
+            setItems(itemsUsuario);
+          }
         } catch (error) {
           console.error("Error al cargar carrito del usuario:", error);
         }
-      } else {
-        // Si no tiene carrito guardado, usar el carrito actual (de invitado)
-        // y asociarlo al usuario
-        if (items.length > 0) {
-          localStorage.setItem(carritoUsuarioKey, JSON.stringify(items));
-        }
+      } else if (carritoInvitado && items.length > 0) {
+        // No tiene carrito guardado, usar el de invitado
+        localStorage.setItem(carritoUsuarioKey, JSON.stringify(items));
+        // Limpiar carrito de invitado
+        localStorage.removeItem("carrito");
       }
     } else {
       // Usuario no autenticado: cargar carrito de invitado
       const carritoInvitado = localStorage.getItem("carrito");
-      // Si hay carrito de invitado, cargarlo
       if (carritoInvitado) {
-        // Intentar parsear el JSON
         try {
           setItems(JSON.parse(carritoInvitado));
         } catch (error) {
