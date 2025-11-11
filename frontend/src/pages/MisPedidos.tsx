@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
-import { API_URL } from "../config/api.config";
+import apiClient from "../services/api.service";
+//import axios from "axios";
+//import { API_URL } from "../config/api.config";
 import { Pedido } from "../interfaces/pedido.interface";
 import Loading from "../components/ui/Loading";
 
@@ -21,12 +22,16 @@ export default function MisPedidos() {
 
     const obtenerPedidos = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/pedidos/usuario/mis-pedidos`
-        );
+        const response = await apiClient.get("/pedidos/usuario/mis-pedidos");
+
+        console.log("✅ Pedidos obtenidos:", response.data);
         setPedidos(response.data.data);
-      } catch (err) {
-        setError("Error al cargar los pedidos");
+      } catch (err: any) {
+        console.error(
+          "❌ Error al obtener pedidos:",
+          err.response?.data || err
+        );
+        setError(err.response?.data?.mensaje || "Error al cargar los pedidos");
       } finally {
         setCargando(false);
       }
